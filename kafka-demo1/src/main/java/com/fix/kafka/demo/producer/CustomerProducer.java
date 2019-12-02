@@ -13,7 +13,7 @@ public class CustomerProducer {
         public static void main(String[] args) throws InterruptedException {
 
             Properties props = new Properties();
-            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop102:9092");
+            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop200:9092");
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
@@ -21,8 +21,8 @@ public class CustomerProducer {
             props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
             props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
             ArrayList<String> interceptors = new ArrayList<>();
-            interceptors.add("com.atguigu.kafka.interceptor.CounterInterceptor");
-            interceptors.add("com.atguigu.kafka.interceptor.TimeInterceptor");
+            interceptors.add("com.fix.kafka.demo.interceptor.TimeInterceptor");
+            interceptors.add("com.fix.kafka.demo.interceptor.CounterInterceptor");
             props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, interceptors);
 
 
@@ -30,9 +30,9 @@ public class CustomerProducer {
             KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
             //2.调用send方法
-            for (int i = 0; i < 1000000; i++) {
-                Thread.sleep(10);
-                producer.send(new ProducerRecord<String, String>("number", i + "", "message-" + i));
+            for (int i = 0; i < 1000; i++) {
+
+                producer.send(new ProducerRecord<String, String>("first", i + "", "message-" + i));
             }
 
             //3.关闭生产者
